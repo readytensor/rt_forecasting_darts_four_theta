@@ -16,6 +16,16 @@ The following are the requirements for using your data with this model:
 
 ---
 
+### Covariates Support:
+
+Past :x:
+
+Future :x:
+
+Static :x:
+
+---
+
 Here are the highlights of this implementation: <br/>
 
 - A **FourTheta Forecaster** algorithm built using **Darts**
