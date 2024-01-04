@@ -14,6 +14,7 @@ from utils import (
     read_json_as_dict,
     set_seeds,
     map_hyperparameters,
+    Timer,
 )
 
 logger = get_logger(task_name="train")
@@ -81,11 +82,13 @@ def run_training(
         logger.info("Training forecaster...")
         default_hyperparameters = read_json_as_dict(default_hyperparameters_file_path)
         default_hyperparameters = map_hyperparameters(default_hyperparameters)
-        forecaster = train_predictor_model(
-            history=validated_data,
-            data_schema=data_schema,
-            hyperparameters=default_hyperparameters,
-        )
+
+        with Timer(logger) as _:
+            forecaster = train_predictor_model(
+                history=validated_data,
+                data_schema=data_schema,
+                hyperparameters=default_hyperparameters,
+            )
 
         # save predictor model
         logger.info("Saving forecaster...")

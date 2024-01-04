@@ -1,3 +1,4 @@
+import time
 import json
 import os
 import random
@@ -219,3 +220,17 @@ def map_hyperparameters(hyperparameters_dict: dict):
         if k in map and v in map[k]:
             hyperparameters_dict[k] = map[k][v]
     return hyperparameters_dict
+
+
+class Timer(object):
+    def __init__(self, logger):
+        self.logger = logger
+
+    def __enter__(self):
+        self.start = time.time()
+        return self
+
+    def __exit__(self, *args):
+        self.end = time.time()
+        self.interval = self.end - self.start
+        self.logger.info(f"Execution time: {self.interval:.2f} seconds")
