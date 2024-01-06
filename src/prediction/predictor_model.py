@@ -54,6 +54,34 @@ class Forecaster:
         self.models = {}
         self.data_schema = None
 
+    def map_frequency(self, frequency: str) -> str:
+        """
+        Maps the frequency in the data schema to the frequency expected by Forecaster.
+
+        Args:
+            frequency (str): The frequency from the schema.
+
+        Returns (str): The mapped frequency.
+        """
+        frequency = frequency.lower()
+        frequency = frequency.split("frequency.")[1]
+        if frequency == "yearly":
+            return "Y"
+        if frequency == "quarterly":
+            return "Q"
+        if frequency == "monthly":
+            return "M"
+        if frequency == "weekly":
+            return "W"
+        if frequency == "daily":
+            return "D"
+        if frequency == "hourly":
+            return "H"
+        if frequency == "minutely":
+            return "min"
+        if frequency in ["secondly", "other"]:
+            return "S"
+
     def fit(self, history: pd.DataFrame, data_schema: ForecastingSchema) -> None:
         """Fit the Forecaster to the training data.
         A separate FourTheta model is fit to each series that is contained
@@ -93,7 +121,10 @@ class Forecaster:
         )
 
         series = TimeSeries.from_dataframe(
-            history, data_schema.time_col, data_schema.target
+            history,
+            data_schema.time_col,
+            data_schema.target,
+            freq=self.map_frequency(data_schema.frequency),
         )
         model.fit(series)
 
