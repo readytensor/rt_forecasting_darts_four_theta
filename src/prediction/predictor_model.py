@@ -121,10 +121,7 @@ class Forecaster:
         )
 
         series = TimeSeries.from_dataframe(
-            history,
-            data_schema.time_col,
-            data_schema.target,
-            freq=self.map_frequency(data_schema.frequency),
+            history, data_schema.time_col, data_schema.target, fill_missing_dates=True
         )
         model.fit(series)
 
