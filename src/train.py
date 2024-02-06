@@ -83,7 +83,7 @@ def run_training(
         default_hyperparameters = read_json_as_dict(default_hyperparameters_file_path)
         default_hyperparameters = map_hyperparameters(default_hyperparameters)
 
-        with Timer(logger) as _:
+        with TimeAndMemoryTracker(logger) as _:
             forecaster = train_predictor_model(
                 history=validated_data,
                 data_schema=data_schema,
