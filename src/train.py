@@ -4,7 +4,6 @@ from config import paths
 from data_models.data_validator import validate_data
 from logger import get_logger, log_error
 from prediction.predictor_model import (
-    evaluate_predictor_model,
     save_predictor_model,
     train_predictor_model,
 )
@@ -13,8 +12,8 @@ from utils import (
     read_csv_in_directory,
     read_json_as_dict,
     set_seeds,
+    TimeAndMemoryTracker,
     map_hyperparameters,
-    Timer,
 )
 
 logger = get_logger(task_name="train")

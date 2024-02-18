@@ -264,20 +264,3 @@ def load_predictor_model(predictor_dir_path: str) -> Forecaster:
         Forecaster: A new instance of the loaded Forecaster model.
     """
     return Forecaster.load(predictor_dir_path)
-
-
-def evaluate_predictor_model(
-    model: Forecaster, x_test: pd.DataFrame, y_test: pd.Series
-) -> float:
-    """
-    Evaluate the Forecaster model and return the accuracy.
-
-    Args:
-        model (Forecaster): The Forecaster model.
-        x_test (pd.DataFrame): The features of the test data.
-        y_test (pd.Series): The labels of the test data.
-
-    Returns:
-        float: The accuracy of the Forecaster model.
-    """
-    return model.evaluate(x_test, y_test)
