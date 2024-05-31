@@ -13,7 +13,7 @@ from utils import (
     read_csv_in_directory,
     read_json_as_dict,
     save_dataframe_as_csv,
-    ResourceTracker,
+    TimeAndMemoryTracker,
 )
 
 logger = get_logger(task_name="predict")
@@ -91,7 +91,7 @@ def run_batch_predictions(
     """
 
     try:
-        with ResourceTracker(logger, monitoring_interval=0.1):
+        with TimeAndMemoryTracker(logger) as _:
             logger.info("Making batch predictions...")
 
             logger.info("Loading schema...")
