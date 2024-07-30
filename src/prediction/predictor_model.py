@@ -9,6 +9,8 @@ from darts.utils.utils import SeasonalityMode, ModelMode, TrendMode
 from darts import TimeSeries
 from schema.data_schema import ForecastingSchema
 from sklearn.exceptions import NotFittedError
+from joblib import Parallel, delayed
+from multiprocessing import cpu_count
 
 warnings.filterwarnings("ignore")
 
@@ -92,18 +94,24 @@ class Forecaster:
             data_schema (ForecastingSchema): The schema of the training data.
         """
         np.random.seed(0)
-        groups_by_ids = history.groupby(data_schema.id_col)
+        history.set_index(
+            data_schema.id_col, inplace=True
+        )  # Set index for faster filtering
+        groups_by_ids = history.groupby(level=0)  # Group by the index
+
         all_ids = list(groups_by_ids.groups.keys())
         all_series = [
-            groups_by_ids.get_group(id_).drop(columns=data_schema.id_col)
-            for id_ in all_ids
+            groups_by_ids.get_group(id_).reset_index(drop=True) for id_ in all_ids
         ]
 
-        self.models = {}
+        def fit_model(id_, series):
+            return id_, self._fit_on_series(history=series, data_schema=data_schema)
 
-        for id, series in zip(all_ids, all_series):
-            model = self._fit_on_series(history=series, data_schema=data_schema)
-            self.models[id] = model
+        n_jobs = max(1, cpu_count() - 2)
+        results = Parallel(n_jobs=n_jobs)(
+            delayed(fit_model)(id_, series) for id_, series in zip(all_ids, all_series)
+        )
+        self.models = dict(results)
 
         self.all_ids = all_ids
         self._is_trained = True
