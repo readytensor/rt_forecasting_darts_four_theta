@@ -1,8 +1,8 @@
 {
   "theta": 2,
-  "season_mode": "additive",
+  "season_mode": "SeasonalityMode.MULTIPLICATIVE",
   "seasonality_period": null,
-  "model_mode": "additive",
-  "trend_mode": "linear",
+  "model_mode": "ModelMode.ADDITIVE",
+  "trend_mode": "rendMode.LINEAR",
   "normalization": true
 }
