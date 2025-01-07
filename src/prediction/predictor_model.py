@@ -119,6 +119,13 @@ class Forecaster:
 
     def _fit_on_series(self, history: pd.DataFrame, data_schema: ForecastingSchema):
         """Fit FourTheta model to given individual series of data"""
+
+        min_series_value = history[data_schema.target].values.min()
+        series = TimeSeries.from_dataframe(history, value_cols=data_schema.target)
+
+        if min_series_value <= 0:
+            self.season_mode = SeasonalityMode.ADDITIVE
+
         model = FourTheta(
             theta=self.theta,
             season_mode=self.season_mode,
@@ -127,8 +134,6 @@ class Forecaster:
             trend_mode=self.trend_mode,
             normalization=self.normalization,
         )
-
-        series = TimeSeries.from_dataframe(history, value_cols=data_schema.target)
 
         model.fit(series)
         return model
